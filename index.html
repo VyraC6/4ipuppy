@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+  <title>4iPuppy — 卡牌互动小游戏</title>
+  <meta name="description" content="为4i情侣打造的互动卡牌小游戏——角色反转、真心话、互动挑战">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🐶</text></svg>">
+</head>
+<body>
+
+  <!-- ====== Welcome Screen ====== -->
+  <div id="welcomeScreen" class="screen active">
+    <div class="welcome-mascot" id="mascot" title="戳我！">🐶</div>
+    <h1 class="welcome-title">4iPuppy</h1>
+    <p class="welcome-subtitle">属于你们的卡牌互动小游戏</p>
+    <p class="welcome-tagline">角色可以反转，尊重永远不变 💕</p>
+
+    <div class="heat-selector" id="heatSelector">
+      <div class="heat-option" data-level="sweet">
+        <span class="heat-emoji">🍬</span>
+        <div class="heat-info">
+          <div class="heat-label">轻松甜蜜</div>
+          <div class="heat-desc">日常互动、小温馨、适合随时来一局</div>
+        </div>
+      </div>
+      <div class="heat-option" data-level="warm">
+        <span class="heat-emoji">🌡️</span>
+        <div class="heat-info">
+          <div class="heat-label">慢慢升温</div>
+          <div class="heat-desc">更有深度的交流、适度的亲密互动</div>
+        </div>
+      </div>
+      <div class="heat-option" data-level="hot">
+        <span class="heat-emoji">🔥</span>
+        <div class="heat-info">
+          <div class="heat-label">火热模式</div>
+          <div class="heat-desc">成人向内容、请确保双方都准备好了</div>
+        </div>
+        <span class="heat-badge heat-badge-adult">18+</span>
+      </div>
+    </div>
+
+    <div class="start-area">
+      <button class="btn btn-primary btn-lg" id="btnStart" style="width:100%">
+        ✨ 开始游戏
+      </button>
+    </div>
+  </div>
+
+  <!-- ====== Game Screen ====== -->
+  <div id="gameScreen" class="screen">
+    <!-- Top bar -->
+    <div class="game-topbar">
+      <span class="game-mode-badge" id="modeBadge">🍬 轻松甜蜜</span>
+      <span class="progress-text" id="progressText">0 / 0</span>
+      <button class="btn btn-ghost btn-sm" id="btnExit">✕ 退出</button>
+    </div>
+    <div class="progress-bar-wrap">
+      <div class="progress-bar-fill" id="progressBar" style="width: 0%"></div>
+    </div>
+
+    <!-- Category filter -->
+    <div class="category-filter" id="categoryFilter">
+      <button class="cat-chip active" data-cat="all">🎲 全部随机</button>
+      <button class="cat-chip" data-cat="role-reversal">🎭 角色反转</button>
+      <button class="cat-chip" data-cat="truth-talk">💬 真心话</button>
+      <button class="cat-chip" data-cat="challenge">⚡ 互动挑战</button>
+      <button class="cat-chip" data-cat="heat-up" id="heatUpChip" style="display:none">🔥 升温时刻</button>
+    </div>
+
+    <!-- Card Area -->
+    <div class="card-area" id="cardArea">
+      <div class="card-stack" id="cardStack">
+        <div class="card-stack-bg"></div>
+        <div class="card-stack-bg"></div>
+        <div class="card" id="card">
+          <div class="card-face card-front">
+            <div class="card-sparkles">
+              <span>✨</span><span>💕</span><span>✨</span>
+            </div>
+            <div class="card-front-icon">🐶</div>
+            <div class="card-front-text">点击翻牌</div>
+            <div class="card-front-hint">看看命运给你准备了什么</div>
+          </div>
+          <div class="card-face card-back">
+            <span class="card-category-tag" id="cardCategoryTag">🎭 角色反转</span>
+            <div class="card-content" id="cardContent"></div>
+            <div class="card-actions">
+              <button class="btn btn-secondary" id="btnSkip">跳过</button>
+              <button class="btn btn-primary" id="btnDone">完成 ✓</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Empty state -->
+    <div id="emptyState" style="display:none; text-align:center; padding: 40px 20px;">
+      <div id="emptyIcon" style="font-size:64px;">🎉</div>
+      <div id="emptyTitle" style="font-size:18px; font-weight:700; margin-top:12px;">全部完成啦！</div>
+      <div id="emptyDesc" style="color:var(--text-light); font-size:14px; margin-top:4px;">你们太棒了，来看看成绩吧</div>
+      <button class="btn btn-primary" id="btnShowSummary" style="margin-top:20px;">查看总结 ✨</button>
+    </div>
+  </div>
+
+  <!-- ====== Summary Screen ====== -->
+  <div id="summaryScreen" class="screen">
+    <div class="summary-icon">💕</div>
+    <div class="summary-title">本轮结束</div>
+    <p style="color:var(--text-light); margin-top:4px;">角色可以反转，但真心永远不变</p>
+
+    <div class="summary-stats">
+      <div class="stat-item">
+        <div class="stat-num" id="statCompleted">0</div>
+        <div class="stat-label">已完成</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-num" id="statSkipped">0</div>
+        <div class="stat-label">已跳过</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-num" id="statTotal">0</div>
+        <div class="stat-label">总卡牌</div>
+      </div>
+    </div>
+
+    <div class="summary-categories" id="summaryCategories"></div>
+
+    <div style="margin-top: 32px; display: flex; flex-direction: column; gap: 10px; width: 100%;">
+      <button class="btn btn-primary btn-lg" id="btnPlayAgain" style="width:100%">
+        🔄 再来一局
+      </button>
+      <button class="btn btn-ghost" id="btnBackHome" style="width:100%">
+        回到首页
+      </button>
+    </div>
+  </div>
+
+  <!-- Toast -->
+  <div class="toast" id="toast"></div>
+
+  <!-- Scripts -->
+  <script src="js/data.js"></script>
+  <script src="js/game.js"></script>
+</body>
+</html>
